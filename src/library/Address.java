@@ -4,5 +4,5 @@ import library.messages.Message;
 
 // @FunctionalInterface
 public interface Address {
-	public void sendMessage(Message m);
+	public void receiveMessage(Message m);
 }

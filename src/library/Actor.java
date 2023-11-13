@@ -36,5 +36,17 @@ public abstract class Actor extends Thread {
 		}
 	}
 
+	public static void sendFromMain(Message m, Address a) {
+        a.receiveMessage(m);
+    }
+
+	public void send(Message m, Address a) {
+        m.setSenderAddress(this.getAddress());
+        a.receiveMessage(m);
+    }
+
+	// falta fazer launch method pra lançar childrens caso haja childrens -> pensar nisto
+
+
 	protected abstract void handleMessage(Message m);
 }

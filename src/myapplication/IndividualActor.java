@@ -24,6 +24,9 @@ public class IndividualActor extends Actor {
 
     @Override
     protected void handleMessage(Message m) {
+
+        // aqui o individual recebe as msgs e no fim envia um response message para o knapsack que deve ser o pai dele
+        // pq é o knapsack que o cria 
         // TODO Auto-generated method stub
         throw new UnsupportedOperationException("Unimplemented method 'handleMessage'");
     }
