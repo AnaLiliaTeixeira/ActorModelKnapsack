@@ -4,6 +4,11 @@ import java.util.Random;
 
 import library.Actor;
 import library.messages.Message;
+import myapplication.messages.CalculateFitnessMessage;
+import myapplication.messages.MutateMessage;
+import myapplication.messages.PrintBestIndividualMessage;
+import myapplication.messages.ResponseMessage;
+import myapplication.messages.TournamentMessage;
 
 public class IndividualActor extends Actor {
 
@@ -27,8 +32,17 @@ public class IndividualActor extends Actor {
 
         // aqui o individual recebe as msgs e no fim envia um response message para o knapsack que deve ser o pai dele
         // pq é o knapsack que o cria 
-        // TODO Auto-generated method stub
-        throw new UnsupportedOperationException("Unimplemented method 'handleMessage'");
+        if (m instanceof CalculateFitnessMessage cfm) {
+
+        } else if (m instanceof PrintBestIndividualMessage pbim) {
+
+        } else if (m instanceof TournamentMessage tm) {
+
+        } else if (m instanceof MutateMessage mm) {
+
+        }
+        
+        this.send(new ResponseMessage(), m.getSenderAddress());
     }
     
 }

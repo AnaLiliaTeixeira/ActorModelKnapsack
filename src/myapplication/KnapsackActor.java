@@ -14,12 +14,16 @@ public class KnapsackActor extends Actor {
 
     @Override
     protected void handleMessage(Message m) {
+        // knapsack envia a individual msg fitness, best individual, tournament, mutation
+        // isto é como se fosse a main
+        // o knapsack começa a mandar as mensagens quando recebe a msg start? 
         
         if (m instanceof StartMessage sm) {
             System.out.println("StartMessage received");
-            this.send(new ResponseMessage(), this.getAddress());
-            // knapsack envia a individual msg fitness, best individual, tournament, mutation
-            // isto é como se fosse a main
+
+            IndividualActor ia = new IndividualActor();
+            this.send(new StartMessage(), ia.getAddress());
+
         }
         else if (m instanceof ResponseMessage rm) {
             System.out.println("ResultMessage received");
