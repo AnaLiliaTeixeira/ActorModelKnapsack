@@ -2,6 +2,7 @@ package myapplication;
 
 import library.Actor;
 import library.messages.Message;
+import library.messages.SystemKillMessage;
 import myapplication.messages.PrintBestIndividualMessage;
 import myapplication.messages.ResponseMessage;
 import myapplication.messages.StartMessage;
@@ -9,6 +10,7 @@ import myapplication.messages.StartMessage;
 public class GenerationsActor extends Actor {
 
     private static final int N_GENERATIONS = 500;
+    private int responsesReceived = 0;
 
     public GenerationsActor() {
     }
@@ -30,6 +32,10 @@ public class GenerationsActor extends Actor {
                 else if (m instanceof ResponseMessage rm) {
                     System.out.println("Generation " + generation + " completed.");
                     System.out.println();
+
+                    if (responsesReceived == N_GENERATIONS) {
+                        this.send(new SystemKillMessage(), this.getAddress());
+                    }
                 }
             }
         }

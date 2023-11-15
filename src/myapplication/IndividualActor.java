@@ -8,7 +8,6 @@ import myapplication.messages.CalculateFitnessMessage;
 import myapplication.messages.CreatePopulationMessage;
 import myapplication.messages.CreatedPopulationMessage;
 import myapplication.messages.MutateMessage;
-import myapplication.messages.PrintBestIndividualMessage;
 import myapplication.messages.ResponseMessage;
 import myapplication.messages.TournamentMessage;
 
@@ -40,8 +39,7 @@ public class IndividualActor extends Actor {
 	public boolean[] selectedItems = new boolean[GENE_SIZE];
 	public int fitness;
 
-    public static IndividualActor createRandom(Random r) {
-		IndividualActor ind = new IndividualActor();
+    public static IndividualActor createRandom(Random r, IndividualActor ind) {
 		for (int i = 0; i < GENE_SIZE; i++) {
 			ind.selectedItems[i] = r.nextBoolean();
 		}
@@ -54,7 +52,7 @@ public class IndividualActor extends Actor {
         // aqui o individual recebe as msgs e no fim envia um response message para o knapsack que deve ser o pai dele
         // pq é o knapsack que o cria 
         if (m instanceof CreatePopulationMessage cpm) {
-            IndividualActor created = IndividualActor.createRandom(r);
+            IndividualActor created = IndividualActor.createRandom(r, cpm.getIndividual());
             this.send(new CreatedPopulationMessage(cpm.getIndividualId(), created), m.getSenderAddress());
 
         } else if (m instanceof CalculateFitnessMessage cfm) {    

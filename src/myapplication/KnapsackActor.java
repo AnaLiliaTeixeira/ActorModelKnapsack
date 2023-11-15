@@ -15,7 +15,8 @@ import myapplication.messages.StartMessage;
 
 public class KnapsackActor extends Actor {
 
-	private static final int POP_SIZE = 100000;
+	private static final int POP_SIZE = 5;
+	// private static final int POP_SIZE = 100000;
 	private static final double PROB_MUTATION = 0.5;
 	private static final int TOURNAMENT_SIZE = 3;
 
@@ -34,7 +35,8 @@ public class KnapsackActor extends Actor {
     private void populateInitialPopulationRandomly() {
 		/* Creates a new population, made of random individuals */
 		for (int i = 0; i < POP_SIZE; i++) {
-            this.send(new CreatePopulationMessage(i), population[i].getAddress());
+			IndividualActor ia = new IndividualActor();
+            this.send(new CreatePopulationMessage(i, ia), ia.getAddress());
 		}
 	}
 
@@ -46,13 +48,10 @@ public class KnapsackActor extends Actor {
         
         if (m instanceof StartMessage sm) { 
             System.out.println("StartMessage received");
-
-            // for (int i = 0; i < POP_SIZE; i++) {
-            //     this.send(new StartMessage(), population[i].getAddress());
-            // }
             
             // Step1 - Calculate Fitness
 			for (int i = 0; i < POP_SIZE; i++) {
+
 				this.send(new CalculateFitnessMessage(), population[i].getAddress());
 			}
 
@@ -81,15 +80,17 @@ public class KnapsackActor extends Actor {
 			}
 			population = newPopulation;
 
+			this.send(new ResponseMessage(), m.getSenderAddress());
+
         }
         else if (m instanceof CreatedPopulationMessage cpm) {
             population[cpm.getIndividualId()] = cpm.getIndividual();
         }
         else if (m instanceof ResponseMessage rm) {
-            System.out.println("ResultMessage received");
             responsesReceived++;
+			System.out.println(responsesReceived);
             // 4 msg recebidas -> fitness, best individual, tournament, mutation
-            if (responsesReceived == 2) {
+            if (responsesReceived == POP_SIZE) {
                 this.send(new ResponseMessage(), m.getSenderAddress());
                 System.out.println("All responses received");
                // this.send(new SystemKillMessage(), this.getAddress());
