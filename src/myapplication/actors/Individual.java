@@ -1,25 +1,18 @@
-package myapplication;
+package myapplication.actors;
 
 import java.util.Random;
 
 import library.Actor;
 import library.messages.Message;
-import myapplication.messages.CalculateFitnessMessage;
-import myapplication.messages.CreatePopulationMessage;
-import myapplication.messages.CreatedPopulationMessage;
-import myapplication.messages.MutateMessage;
-import myapplication.messages.ResponseMessage;
-import myapplication.messages.TournamentMessage;
+// import myapplication.messages.CalculateFitnessMessage;
 
-public class IndividualActor extends Actor {
+public class Individual {
 
     // This is the definition of the problem
 	public static final int GENE_SIZE = 1000; // Number of possible items
 	public static int[] VALUES = new int[GENE_SIZE];
 	public static int[] WEIGHTS = new int[GENE_SIZE];
 	public static int WEIGHT_LIMIT = 300;
-
-    private Random r = new Random();
 
 	static {
 		// This code initializes the problem.
@@ -30,7 +23,7 @@ public class IndividualActor extends Actor {
 		}
 	}
 
-    /*
+	/*
 	 * This array corresponds to whether the object at a given index
 	 * is selected to be placed inside the knapsack.
 	 * The goal is to find the items that maximize the total value with
@@ -39,36 +32,16 @@ public class IndividualActor extends Actor {
 	public boolean[] selectedItems = new boolean[GENE_SIZE];
 	public int fitness;
 
-    public static IndividualActor createRandom(Random r, IndividualActor ind) {
+	public static Individual createRandom(Random r) {
+		Individual ind = new Individual();
 		for (int i = 0; i < GENE_SIZE; i++) {
 			ind.selectedItems[i] = r.nextBoolean();
 		}
 		return ind;
 	}
 
-    @Override
-    protected void handleMessage(Message m) {
-
-        // aqui o individual recebe as msgs e no fim envia um response message para o knapsack que deve ser o pai dele
-        // pq é o knapsack que o cria 
-        if (m instanceof CreatePopulationMessage cpm) {
-            IndividualActor created = IndividualActor.createRandom(r, cpm.getIndividual());
-            this.send(new CreatedPopulationMessage(cpm.getIndividualId(), created), m.getSenderAddress());
-
-        } else if (m instanceof CalculateFitnessMessage cfm) {    
-            this.measureFitness();
-
-        } else if (m instanceof TournamentMessage tm) {
-
-        } else if (m instanceof MutateMessage mm) {
-
-        }
-
-        this.send(new ResponseMessage(), m.getSenderAddress());
-    }
-
-    /*
-	 * This method evaluates how good a solution the current individual is.
+	/*
+	 * This method evaluates how good a solution the current Individual is.
 	 * Returns +totalValue if within the weight limit, otherwise returns
 	 * -overlimit. The goal is to maximize the fitness.
 	 */
@@ -93,8 +66,8 @@ public class IndividualActor extends Actor {
 	 * Until that point, uses genes from dad (current)
 	 * After that point, uses genes from mom (mate)
 	 */
-	public IndividualActor crossoverWith(IndividualActor mate, Random r) {
-		IndividualActor child = new IndividualActor();
+	public Individual crossoverWith(Individual mate, Random r) {
+		Individual child = new Individual();
 		int crossoverPoint = r.nextInt(GENE_SIZE);
 		for (int i = 0; i < GENE_SIZE; i++) {
 			if (i < crossoverPoint) {
@@ -110,4 +83,12 @@ public class IndividualActor extends Actor {
 		int mutationPoint = r.nextInt(GENE_SIZE);
 		this.selectedItems[mutationPoint] = !this.selectedItems[mutationPoint];
 	}
+
+    // @Override
+    // protected void handleMessage(Message m) {
+    //     if (m instanceof CalculateFitnessMessage cm) {
+            
+    //     }
+    // }
+    
 }
