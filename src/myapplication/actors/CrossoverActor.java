@@ -3,8 +3,11 @@ package myapplication.actors;
 import java.util.Random;
 
 import library.Actor;
+import library.Individual;
 import library.messages.Message;
 import library.messages.SystemKillMessage;
+import myapplication.messages.CrossoverMessage;
+import myapplication.messages.MutationMessage;
 
 public class CrossoverActor extends Actor {
 

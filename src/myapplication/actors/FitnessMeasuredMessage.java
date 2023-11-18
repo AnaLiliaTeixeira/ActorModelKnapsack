@@ -1,4 +1,5 @@
 package myapplication.actors;
+import library.Individual;
 import library.messages.Message;
 
 public class FitnessMeasuredMessage extends Message {

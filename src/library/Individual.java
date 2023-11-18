@@ -1,8 +1,7 @@
-package myapplication.actors;
+package library;
 
 import java.util.Random;
 
-import library.Actor;
 import library.messages.Message;
 // import myapplication.messages.CalculateFitnessMessage;
 

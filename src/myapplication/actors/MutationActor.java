@@ -3,7 +3,10 @@ package myapplication.actors;
 import java.util.Random;
 
 import library.Actor;
+import library.Individual;
 import library.messages.Message;
+import myapplication.messages.GenerationCompletedMessage;
+import myapplication.messages.MutationMessage;
 
 public class MutationActor extends Actor {
 

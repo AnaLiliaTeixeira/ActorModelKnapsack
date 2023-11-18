@@ -1,5 +1,6 @@
-package myapplication.actors;
+package myapplication.messages;
 
+import library.Individual;
 import library.messages.Message;
 
 public class CrossoverMessage extends Message {
