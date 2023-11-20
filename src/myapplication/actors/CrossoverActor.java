@@ -1,21 +1,20 @@
 package myapplication.actors;
 
 import java.util.Random;
+import java.util.concurrent.ThreadLocalRandom;
 
 import library.Actor;
 import library.Individual;
 import library.messages.Message;
-import library.messages.SystemKillMessage;
 import myapplication.messages.CrossoverMessage;
 import myapplication.messages.MutationMessage;
 
 public class CrossoverActor extends Actor {
 
-    // private KnapsackActor ka = new KnapsackActor();
     private static final int POP_SIZE = 100000;
     private static final double PROB_MUTATION = 0.5;
     private Individual[] population;
-    private Random r = new Random();
+	private ThreadLocalRandom r = ThreadLocalRandom.current();
 
     @Override
     protected void handleMessage(Message m) {
@@ -32,14 +31,9 @@ public class CrossoverActor extends Actor {
 
                 newPopulation[i] = parent1.crossoverWith(parent2, r);
             }
+
             this.send(new MutationMessage(POP_SIZE, newPopulation, PROB_MUTATION), m.getSenderAddress());
-            // this.send(new CrossoverDoneMessage(population), m.getSenderAddress());
         }
-        // else if (m instanceof SystemKillMessage) {
-        //     System.out.println("HEREEE");
-        //     this.send(new SystemKillMessage(), this.getAddress());
-        //     this.send(new SystemKillMessage(), ka.getAddress());
-        // }
     }
 
     private Individual tournament(int tournamentSize, Random r, Individual[] population) {

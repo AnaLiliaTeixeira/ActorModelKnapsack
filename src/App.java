@@ -1,6 +1,6 @@
 import library.Actor;
 import myapplication.actors.CreatePopulationActor;
-import myapplication.actors.CreatePopulationMessage;
+import myapplication.messages.CreatePopulationMessage;
 
 public class App {
     private static final int POP_SIZE = 100000;

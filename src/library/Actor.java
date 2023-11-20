@@ -1,11 +1,17 @@
 package library;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.concurrent.ConcurrentLinkedQueue;
 
 import library.messages.Message;
 import library.messages.SystemKillMessage;
 
 public abstract class Actor extends Thread {
+
+	private boolean running = true;
+	private ConcurrentLinkedQueue<Message> mailbox = new ConcurrentLinkedQueue<>();
+	private List<Actor> children = new ArrayList<>();
 
 	public Actor() {
 		this.start();
@@ -16,10 +22,10 @@ public abstract class Actor extends Thread {
 			mailbox.add(m);
 		};
 	}
-	ConcurrentLinkedQueue<Message> mailbox = new ConcurrentLinkedQueue<>();
+
 
     public void run() {
-		while (true) {
+		while (running || !mailbox.isEmpty()) {
 			Message m = mailbox.poll();
 			if (m == null) {
 				try {
@@ -30,11 +36,19 @@ public abstract class Actor extends Thread {
 			} else {
 				handleMessage(m);
 				if (m instanceof SystemKillMessage)  {
-					return;
+					running = false;
+                    for (Actor a : children) {
+                        this.send(m, a.getAddress());
+                    }
 				}
 			}
 		}
 	}
+
+	public Actor launchActor(Actor a) {
+        this.children.add(a);
+        return a;
+    }
 
 	public static void sendFromMain(Message m, Address a) {
         a.receiveMessage(m);
@@ -44,9 +58,6 @@ public abstract class Actor extends Thread {
         m.setSenderAddress(this.getAddress());
         a.receiveMessage(m);
     }
-
-	// falta fazer launch method pra lançar childrens caso haja childrens -> pensar nisto
-
 
 	protected abstract void handleMessage(Message m);
 }

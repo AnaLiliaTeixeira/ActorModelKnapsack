@@ -1,6 +1,6 @@
 package myapplication.actors;
 
-import java.util.Random;
+import java.util.concurrent.ThreadLocalRandom;
 
 import library.Actor;
 import library.Individual;
@@ -11,7 +11,7 @@ import myapplication.messages.MutationMessage;
 public class MutationActor extends Actor {
 
     private Individual[] population;
-    private Random r = new Random();
+    private ThreadLocalRandom r = ThreadLocalRandom.current();
 
     @Override
     protected void handleMessage(Message m) {

@@ -1,18 +1,19 @@
 package myapplication.actors;
 
-import java.util.Random;
+import java.util.concurrent.ThreadLocalRandom;
 
 import library.Actor;
 import library.Individual;
 import library.messages.Message;
 import library.messages.SystemKillMessage;
+import myapplication.messages.CreatePopulationMessage;
 import myapplication.messages.StartGenerationMessage;
 
 public class CreatePopulationActor extends Actor {
 
-    private KnapsackActor ka = new KnapsackActor();
+    private Actor ka = launchActor(new KnapsackActor());
     private Individual[] population;
-    private Random r = new Random();
+    private ThreadLocalRandom r = ThreadLocalRandom.current();
 
     @Override
     protected void handleMessage(Message m) {
@@ -26,7 +27,7 @@ public class CreatePopulationActor extends Actor {
         else if (m instanceof SystemKillMessage) {
             System.out.println("HEREEE");
             this.send(new SystemKillMessage(), this.getAddress());
-            this.send(new SystemKillMessage(), ka.getAddress());
+            // this.send(new SystemKillMessage(), ka.getAddress());
         }
     }
     

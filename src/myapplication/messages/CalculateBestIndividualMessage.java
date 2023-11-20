@@ -3,16 +3,15 @@ package myapplication.messages;
 import library.Individual;
 import library.messages.Message;
 
-public class StartGenerationMessage extends Message {
+public class CalculateBestIndividualMessage extends Message {
 
     private Individual[] population;
 
-    public StartGenerationMessage(Individual[] population) {
+    public CalculateBestIndividualMessage(Individual[] population) {
         this.population = population;
     }
-
     public Individual[] getPopulation() {
-        return population;
+        return this.population;
     }
 
 }

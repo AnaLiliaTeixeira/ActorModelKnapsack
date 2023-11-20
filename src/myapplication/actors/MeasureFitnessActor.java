@@ -2,6 +2,7 @@ package myapplication.actors;
 import library.Actor;
 import library.Individual;
 import library.messages.Message;
+import myapplication.messages.FitnessMeasuredMessage;
 import myapplication.messages.MeasureFitnessMessage;
 
 public class MeasureFitnessActor extends Actor {
