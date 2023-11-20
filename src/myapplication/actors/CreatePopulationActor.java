@@ -15,6 +15,8 @@ public class CreatePopulationActor extends Actor {
     private Individual[] population;
     private ThreadLocalRandom r = ThreadLocalRandom.current();
 
+    private long endExecutionTime;
+
     @Override
     protected void handleMessage(Message m) {
         if (m instanceof CreatePopulationMessage cm) {
@@ -25,10 +27,20 @@ public class CreatePopulationActor extends Actor {
             this.send(new StartGenerationMessage(this.population), ka.getAddress());
         }
         else if (m instanceof SystemKillMessage) {
-            System.out.println("HEREEE");
-            this.send(new SystemKillMessage(), this.getAddress());
+            System.out.println("measuring time and ending system");
+            this.setEndExecutionTime(System.nanoTime());
+            return;
+            // this.send(new SystemKillMessage(), this.getAddress());
             // this.send(new SystemKillMessage(), ka.getAddress());
         }
+    }
+
+    public void setEndExecutionTime(long time) {
+        this.endExecutionTime = time;
+    }
+
+    public long getEndExecutionTime() {
+        return this.endExecutionTime;
     }
     
 }

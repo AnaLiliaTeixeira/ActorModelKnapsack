@@ -4,6 +4,7 @@ import java.util.Random;
 import java.util.concurrent.ThreadLocalRandom;
 
 import library.Actor;
+import library.Address;
 import library.Individual;
 import library.messages.Message;
 import library.messages.SystemKillMessage;
@@ -18,12 +19,13 @@ import myapplication.messages.StartGenerationMessage;
 
 public class KnapsackActor extends Actor {
 
-    private static final int N_GENERATIONS = 5;
+    private static final int N_GENERATIONS = 1;
 	private static final int POP_SIZE = 100000;
 	private static final double PROB_MUTATION = 0.5;
 	private static final int TOURNAMENT_SIZE = 3;
 
     private int currentGeneration = 0;
+    private Address createPopulationAddress;
     private Actor fitnessActor = launchActor(new MeasureFitnessActor());
     private Actor bestActor = launchActor(new BestIndividualActor());
     private Actor crossoverActor = launchActor(new CrossoverActor());
@@ -32,8 +34,8 @@ public class KnapsackActor extends Actor {
     @Override
     protected void handleMessage(Message m) {
             if (m instanceof StartGenerationMessage sm) {
+                createPopulationAddress = sm.getSenderAddress();
                 // Step1 - Calculate Fitness
-                System.out.println(this.getAddress());
                 this.send(new MeasureFitnessMessage(POP_SIZE, sm.getPopulation(), currentGeneration), fitnessActor.getAddress());
             }
             else if (m instanceof FitnessMeasuredMessage fm) {
@@ -56,7 +58,9 @@ public class KnapsackActor extends Actor {
             else if (m instanceof GenerationCompletedMessage dm) {
                 currentGeneration++;
                 if (currentGeneration == N_GENERATIONS) {
-                    this.send(new SystemKillMessage(), m.getSenderAddress());
+                    System.out.println("Sending message...");
+                    this.send(new SystemKillMessage(), this.getAddress());
+                    this.send(new SystemKillMessage(), createPopulationAddress);
                 }
                 else {
                     this.send(new StartGenerationMessage(dm.getPopulation()), this.getAddress());

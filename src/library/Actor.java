@@ -38,7 +38,8 @@ public abstract class Actor extends Thread {
 				if (m instanceof SystemKillMessage)  {
 					running = false;
                     for (Actor a : children) {
-                        this.send(m, a.getAddress());
+						this.send(m, a.getAddress());
+						System.out.println("kill message sent");
                     }
 				}
 			}
