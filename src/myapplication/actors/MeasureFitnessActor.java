@@ -8,13 +8,14 @@ import myapplication.messages.MeasureFitnessMessage;
 public class MeasureFitnessActor extends Actor {
 
     private Individual[] population;
+	private static final int POP_SIZE = 100000;
 
     @Override
     protected void handleMessage(Message m) {
         if (m instanceof MeasureFitnessMessage mm) {
             population = mm.getPopulation();
             
-            for (int i = 0; i < mm.getPopSize(); i++) {
+            for (int i = 0; i < POP_SIZE; i++) {
 				population[i].measureFitness();   
 			}
             this.send(new FitnessMeasuredMessage(population, mm.getGeneration()), m.getSenderAddress());
