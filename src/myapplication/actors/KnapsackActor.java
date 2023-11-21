@@ -16,7 +16,7 @@ import myapplication.messages.StartGenerationMessage;
 
 public class KnapsackActor extends Actor {
 
-    private static final int N_GENERATIONS = 2;
+    private static final int N_GENERATIONS = 500;
 
     private int currentGeneration = 0;
     private Actor createPopulationActor = launchActor(new CreatePopulationActor());

@@ -7,7 +7,7 @@ import myapplication.actors.KnapsackActor;
 import myapplication.messages.CreatePopulationMessage;
 
 public class App {
-    private static final int ITERATIONS = 2;
+    private static final int ITERATIONS = 30;
 
     public static void main(String[] args) throws InterruptedException {
 

@@ -2,26 +2,14 @@ import pandas as pd
 from scipy.stats import kruskal
 import matplotlib.pyplot as plt
 
-df_results = pd.read_csv('results.csv')
-sequential_results = df['Sequential']
-methods = {}
-
-for column in df.columns[1:]:
-    method_results = df[column]
+df_results = pd.read_csv('resultsActorModel.csv')
+df_knapsack = pd.read_csv('resultsKnapsack.csv')
     
-    h_statistic, p_value = kruskal(sequential_results, method_results)
-    methods[column] = p_value
-
-for method in methods:
-    print(f'P-Value ({method} vs Sequential): {methods[method]}')
-
-# #Statistical test
-# alpha = 0.05
-# significant_methods = [column for column in methods.keys() if methods[column] < alpha]
-# print(f'Methods with significant differences in relation to the sequential method: {significant_methods}')
-# print()
+sequentialResults = df_knapsack['Sequential']
+actorModelResults = df_results['Actor Model']
+phaserResults = df_knapsack[' Phaser:Thread 4']
 
 #Generate boxplot
-plt.boxplot([sequential_results] + [df[method] for method in methods.keys()], labels=df.columns)
+plt.boxplot([sequentialResults] + [actorModelResults] + [phaserResults], labels=['Sequential', 'Actor Model', 'Phaser:Thread 4'])
 plt.xticks(fontsize=8)
 plt.show()
