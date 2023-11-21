@@ -39,8 +39,9 @@ public abstract class Actor extends Thread {
 					running = false;
                     for (Actor a : children) {
 						this.send(m, a.getAddress());
-						System.out.println("kill message sent");
                     }
+					// System.out.println("Actor " + this.getClass().getSimpleName() + " is dead");
+					return;
 				}
 			}
 		}

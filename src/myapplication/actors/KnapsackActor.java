@@ -9,6 +9,7 @@ import library.Individual;
 import library.messages.Message;
 import library.messages.SystemKillMessage;
 import myapplication.messages.CalculateBestIndividualMessage;
+import myapplication.messages.CreatePopulationMessage;
 import myapplication.messages.CrossoverMessage;
 import myapplication.messages.FitnessMeasuredMessage;
 import myapplication.messages.GenerationCompletedMessage;
@@ -19,13 +20,13 @@ import myapplication.messages.StartGenerationMessage;
 
 public class KnapsackActor extends Actor {
 
-    private static final int N_GENERATIONS = 1;
+    private static final int N_GENERATIONS = 2;
 	private static final int POP_SIZE = 100000;
 	private static final double PROB_MUTATION = 0.5;
 	private static final int TOURNAMENT_SIZE = 3;
 
     private int currentGeneration = 0;
-    private Address createPopulationAddress;
+    private Actor createPopulationActor = launchActor(new CreatePopulationActor());
     private Actor fitnessActor = launchActor(new MeasureFitnessActor());
     private Actor bestActor = launchActor(new BestIndividualActor());
     private Actor crossoverActor = launchActor(new CrossoverActor());
@@ -33,14 +34,16 @@ public class KnapsackActor extends Actor {
 
     @Override
     protected void handleMessage(Message m) {
-            if (m instanceof StartGenerationMessage sm) {
-                createPopulationAddress = sm.getSenderAddress();
+            if (m instanceof CreatePopulationMessage cm) {
+                this.send(cm, createPopulationActor.getAddress());
+            }
+            else if (m instanceof StartGenerationMessage sm) {
+                // createPopulationAddress = sm.getSenderAddress();
                 // Step1 - Calculate Fitness
                 this.send(new MeasureFitnessMessage(POP_SIZE, sm.getPopulation(), currentGeneration), fitnessActor.getAddress());
             }
             else if (m instanceof FitnessMeasuredMessage fm) {
                 this.send(new CalculateBestIndividualMessage(fm.getPopulation()), bestActor.getAddress());
-
             }
             else if (m instanceof ResponseBestIndividualMessage rm) {
                 // Step2 - Print the best Individual so far.
@@ -58,9 +61,8 @@ public class KnapsackActor extends Actor {
             else if (m instanceof GenerationCompletedMessage dm) {
                 currentGeneration++;
                 if (currentGeneration == N_GENERATIONS) {
-                    System.out.println("Sending message...");
+                    System.out.println("Going to kill");
                     this.send(new SystemKillMessage(), this.getAddress());
-                    this.send(new SystemKillMessage(), createPopulationAddress);
                 }
                 else {
                     this.send(new StartGenerationMessage(dm.getPopulation()), this.getAddress());

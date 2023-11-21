@@ -11,10 +11,11 @@ import myapplication.messages.StartGenerationMessage;
 
 public class CreatePopulationActor extends Actor {
 
-    private Actor ka = launchActor(new KnapsackActor());
+    // private Actor ka = launchActor(new KnapsackActor());
     private Individual[] population;
     private ThreadLocalRandom r = ThreadLocalRandom.current();
-
+    
+    private boolean endProgram = false;
     private long endExecutionTime;
 
     @Override
@@ -24,15 +25,32 @@ public class CreatePopulationActor extends Actor {
             for (int i = 0; i < cm.getPopSize(); i++) {
                 population[i] = Individual.createRandom(r);
             }
-            this.send(new StartGenerationMessage(this.population), ka.getAddress());
-        }
-        else if (m instanceof SystemKillMessage) {
-            System.out.println("measuring time and ending system");
+            this.send(new StartGenerationMessage(this.population), m.getSenderAddress());
+        } else if (m instanceof SystemKillMessage) {
+            System.out.println("final kill");
+            endProgram = true;
             this.setEndExecutionTime(System.nanoTime());
-            return;
-            // this.send(new SystemKillMessage(), this.getAddress());
-            // this.send(new SystemKillMessage(), ka.getAddress());
+
+            synchronized (this) {
+                this.notifyAll();
+            }
         }
+    }
+
+    public long waitForActorToFinish() throws InterruptedException {
+        // Aguarde até que a conclusão seja sinalizada pelo ator
+        synchronized (this) {
+            while (!endProgram) {
+                this.wait();
+            }
+        }
+        // try {
+        //     ka.join();
+        // } catch (InterruptedException e) {
+        //     e.printStackTrace();
+        // }
+        System.out.println("returning execution time =" + this.endExecutionTime);
+        return this.endExecutionTime;
     }
 
     public void setEndExecutionTime(long time) {
@@ -42,5 +60,4 @@ public class CreatePopulationActor extends Actor {
     public long getEndExecutionTime() {
         return this.endExecutionTime;
     }
-    
 }
