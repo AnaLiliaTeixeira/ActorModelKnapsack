@@ -2,7 +2,7 @@ package myapplication.actors;
 import library.Actor;
 import library.Individual;
 import library.messages.Message;
-import myapplication.messages.FitnessMeasuredMessage;
+import myapplication.messages.CalculateBestIndividualMessage;
 import myapplication.messages.MeasureFitnessMessage;
 
 public class MeasureFitnessActor extends Actor {
@@ -20,7 +20,8 @@ public class MeasureFitnessActor extends Actor {
 
             population[individualCounter-1] = mm.getIndividual(); 
             if (individualCounter == POP_SIZE) {
-                this.send(new FitnessMeasuredMessage(population, mm.getGeneration()), m.getSenderAddress());
+                this.send(new CalculateBestIndividualMessage(population, mm.getGeneration()), this.getChild().getAddress());
+                // this.send(new FitnessMeasuredMessage(population, mm.getGeneration()), m.getSenderAddress());
                 individualCounter = 0;
             }
         }

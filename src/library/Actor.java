@@ -40,7 +40,6 @@ public abstract class Actor extends Thread {
                     for (Actor a : children) {
 						this.send(m, a.getAddress());
                     }
-					// System.out.println("Actor " + this.getClass().getSimpleName() + " is dead");
 					return;
 				}
 			}
@@ -60,6 +59,14 @@ public abstract class Actor extends Thread {
         m.setSenderAddress(this.getAddress());
         a.receiveMessage(m);
     }
+
+	public List<Actor> getChildren() {
+		return children;
+	}
+
+	public Actor getChild() {
+		return children.get(0);
+	}
 
 	protected abstract void handleMessage(Message m);
 }

@@ -17,8 +17,7 @@ public class App {
             for (int i = 0; i < ITERATIONS; i++) {
 
                 System.out.println("\nIteration: " + i);
-                long actorTime = runKnapsackActorModel();
-                System.out.println("TIMEEEEEEEEEEEE");
+                long actorTime = runKnapsackActorModel(i);
                 System.out.println(actorTime);
                 csvWriter.append(actorTime + "\n");
                 
@@ -29,11 +28,11 @@ public class App {
         }
     }
 
-    private static long runKnapsackActorModel() {
+    private static long runKnapsackActorModel(int iter) {
 
             long start = System.nanoTime();
             KnapsackActor ka = new KnapsackActor();
-            Actor.sendFromMain(new CreatePopulationMessage(), ka.getAddress());
+            Actor.sendFromMain(new CreatePopulationMessage(iter), ka.getAddress());
             
             try {
                 ka.join();

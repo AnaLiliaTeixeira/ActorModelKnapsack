@@ -25,7 +25,9 @@ public class CrossoverActor extends Actor {
             Individual parent2 = tournament(TOURNAMENT_SIZE, r, cm.getPopulation());
 
             ind = parent1.crossoverWith(parent2, r);
-            this.send(new MutationMessage(ind, cm.getBest()), m.getSenderAddress());
+			// this.send(new MutationMessage(mm.getIndividual(), mm.getBest()), mutationActor.getAddress());
+
+            this.send(new MutationMessage(ind, cm.getBest()), this.getChild().getAddress());
         }
     }
 

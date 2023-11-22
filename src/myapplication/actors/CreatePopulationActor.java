@@ -6,7 +6,7 @@ import library.Actor;
 import library.Individual;
 import library.messages.Message;
 import myapplication.messages.CreatePopulationMessage;
-import myapplication.messages.StartGenerationMessage;
+import myapplication.messages.MeasureFitnessMessage;
 
 public class CreatePopulationActor extends Actor {
 
@@ -19,7 +19,9 @@ public class CreatePopulationActor extends Actor {
         if (m instanceof CreatePopulationMessage cm) {
             for (int i = 0; i < POP_SIZE; i++) {
                 population[i] = Individual.createRandom(r);
-                this.send(new StartGenerationMessage(population[i]), m.getSenderAddress());
+                // this.send(new StartGenerationMessage(population[i]), m.getSenderAddress());
+                this.send(new MeasureFitnessMessage(population[i], cm.getGeneration()), this.getChild().getAddress());
+
             }
         } 
     }
