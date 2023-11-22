@@ -21,7 +21,6 @@ public class MeasureFitnessActor extends Actor {
             population[individualCounter-1] = mm.getIndividual(); 
             if (individualCounter == POP_SIZE) {
                 this.send(new CalculateBestIndividualMessage(population, mm.getGeneration()), this.getChild().getAddress());
-                // this.send(new FitnessMeasuredMessage(population, mm.getGeneration()), m.getSenderAddress());
                 individualCounter = 0;
             }
         }

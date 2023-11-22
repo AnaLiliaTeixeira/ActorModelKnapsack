@@ -5,9 +5,6 @@ public class CreatePopulationMessage extends Message {
     
     private int generation;
 
-    public CreatePopulationMessage() {
-    }
-
     public int getGeneration() {
         return generation;
     }

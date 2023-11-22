@@ -27,7 +27,6 @@ public class MutationActor extends Actor {
         
             if (individualCounter == POP_SIZE-1) {
                 newPopulation[0] = mm.getBest(); // The best Individual remains
-                // this.send(new GenerationCompletedMessage(newPopulation), m.getSenderAddress());
                 this.send(new GenerationCompletedMessage(newPopulation), this.getChild().getAddress());
                 individualCounter = 0;
             }
