@@ -3,7 +3,12 @@ import java.io.IOException;
 
 import library.Actor;
 import library.messages.SystemKillMessage;
+import myapplication.actors.BestIndividualActor;
+import myapplication.actors.CreatePopulationActor;
+import myapplication.actors.CrossoverActor;
 import myapplication.actors.KnapsackActor;
+import myapplication.actors.MeasureFitnessActor;
+import myapplication.actors.MutationActor;
 import myapplication.messages.CreatePopulationMessage;
 
 public class App {
@@ -17,7 +22,7 @@ public class App {
             for (int i = 0; i < ITERATIONS; i++) {
 
                 System.out.println("\nIteration: " + i);
-                long actorTime = runKnapsackActorModel(i);
+                long actorTime = runKnapsackActorModel();
                 System.out.println(actorTime);
                 csvWriter.append(actorTime + "\n");
                 
@@ -28,18 +33,31 @@ public class App {
         }
     }
 
-    private static long runKnapsackActorModel(int iter) {
+    private static long runKnapsackActorModel() {
 
             long start = System.nanoTime();
-            KnapsackActor ka = new KnapsackActor();
-            Actor.sendFromMain(new CreatePopulationMessage(iter), ka.getAddress());
+            Actor knapsackActor = new KnapsackActor();
+            Actor createPopulationActor = new CreatePopulationActor();
+            Actor fitnessActor = new MeasureFitnessActor();
+            Actor bestActor = new BestIndividualActor();
+            Actor crossoverActor = new CrossoverActor();
+            Actor mutationActor = new MutationActor();
+
+            knapsackActor.launchActor(createPopulationActor);
+            createPopulationActor.launchActor(fitnessActor);
+            fitnessActor.launchActor(bestActor);
+            bestActor.launchActor(crossoverActor);
+            crossoverActor.launchActor(mutationActor);
+            mutationActor.launchActor(knapsackActor);
+
+            Actor.sendFromMain(new CreatePopulationMessage(), knapsackActor.getAddress());
             
             try {
-                ka.join();
+                knapsackActor.join();
             } catch (InterruptedException e) {
                 e.printStackTrace();
             }
-            Actor.sendFromMain(new SystemKillMessage(), ka.getAddress());
+            Actor.sendFromMain(new SystemKillMessage(), knapsackActor.getAddress());
             return System.nanoTime() - start;
     }
 }

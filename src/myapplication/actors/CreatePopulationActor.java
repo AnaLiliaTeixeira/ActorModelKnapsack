@@ -19,9 +19,7 @@ public class CreatePopulationActor extends Actor {
         if (m instanceof CreatePopulationMessage cm) {
             for (int i = 0; i < POP_SIZE; i++) {
                 population[i] = Individual.createRandom(r);
-                // this.send(new StartGenerationMessage(population[i]), m.getSenderAddress());
                 this.send(new MeasureFitnessMessage(population[i], cm.getGeneration()), this.getChild().getAddress());
-
             }
         } 
     }

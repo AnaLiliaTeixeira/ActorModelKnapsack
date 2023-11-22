@@ -5,11 +5,13 @@ public class CreatePopulationMessage extends Message {
     
     private int generation;
 
-    public CreatePopulationMessage(int generation) {
-        this.generation = generation;
+    public CreatePopulationMessage() {
     }
 
     public int getGeneration() {
         return generation;
+    }
+    public void setGeneration(int generation) {
+        this.generation = generation;
     }
 }
