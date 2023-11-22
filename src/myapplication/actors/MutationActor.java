@@ -10,22 +10,26 @@ import myapplication.messages.MutationMessage;
 
 public class MutationActor extends Actor {
 
-    private Individual[] population;
     private static final int POP_SIZE = 100000;
+    private Individual[] newPopulation = new Individual[POP_SIZE];
     private static final double PROB_MUTATION = 0.5;
     private ThreadLocalRandom r = ThreadLocalRandom.current();
+    private int individualCounter = 0;
 
     @Override
     protected void handleMessage(Message m) {
         if (m instanceof MutationMessage mm) {
-            population = mm.getPopulation();
-
-            for (int i = 1; i < POP_SIZE; i++) {
-                if (r.nextDouble() < PROB_MUTATION) {
-                    population[i].mutate(r);
-                }
+            individualCounter++;
+            if (r.nextDouble() < PROB_MUTATION) {
+                mm.getIndividual().mutate(r);
             }
-            this.send(new GenerationCompletedMessage(population), m.getSenderAddress());
+            newPopulation[individualCounter] = mm.getIndividual();
+        
+            if (individualCounter == POP_SIZE-1) {
+                newPopulation[0] = mm.getBest(); // The best Individual remains
+                this.send(new GenerationCompletedMessage(newPopulation), m.getSenderAddress());
+                individualCounter = 0;
+            }
         }
     }
 }

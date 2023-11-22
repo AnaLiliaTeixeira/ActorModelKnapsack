@@ -5,14 +5,14 @@ import library.messages.Message;
 
 public class StartGenerationMessage extends Message {
 
-    private Individual[] population;
+    private Individual ind;
 
-    public StartGenerationMessage(Individual[] population) {
-        this.population = population;
+    public StartGenerationMessage(Individual ind) {
+        this.ind = ind;
     }
 
-    public Individual[] getPopulation() {
-        return population;
+    public Individual getIndividual() {
+        return ind;
     }
 
 }

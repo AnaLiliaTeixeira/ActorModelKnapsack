@@ -23,5 +23,4 @@ public class BestIndividualActor extends Actor {
             this.send(new ResponseBestIndividualMessage(best, population), cm.getSenderAddress());
         }
     }
-    
 }

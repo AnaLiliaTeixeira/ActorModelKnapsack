@@ -12,28 +12,20 @@ import myapplication.messages.MutationMessage;
 public class CrossoverActor extends Actor {
 
     private static final int POP_SIZE = 100000;
-    private static final double PROB_MUTATION = 0.5;
 	private static final int TOURNAMENT_SIZE = 3;
-    private Individual[] population;
+
+    private Individual ind;
 	private ThreadLocalRandom r = ThreadLocalRandom.current();
 
     @Override
     protected void handleMessage(Message m) {
         if (m instanceof CrossoverMessage cm) {
-            population = cm.getPopulation();
 
-            Individual[] newPopulation = new Individual[POP_SIZE];
-            newPopulation[0] = cm.getBest(); // The best Individual remains
+            Individual parent1 = tournament(TOURNAMENT_SIZE, r, cm.getPopulation());
+            Individual parent2 = tournament(TOURNAMENT_SIZE, r, cm.getPopulation());
 
-            for (int i = 1; i < POP_SIZE; i++) {
-                // We select two parents, using a tournament.
-                Individual parent1 = tournament(TOURNAMENT_SIZE, r, population);
-                Individual parent2 = tournament(TOURNAMENT_SIZE, r, population);
-
-                newPopulation[i] = parent1.crossoverWith(parent2, r);
-            }
-
-            this.send(new MutationMessage(newPopulation), m.getSenderAddress());
+            ind = parent1.crossoverWith(parent2, r);
+            this.send(new MutationMessage(ind, cm.getBest()), m.getSenderAddress());
         }
     }
 

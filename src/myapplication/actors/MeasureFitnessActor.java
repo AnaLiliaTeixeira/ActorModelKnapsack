@@ -7,19 +7,22 @@ import myapplication.messages.MeasureFitnessMessage;
 
 public class MeasureFitnessActor extends Actor {
 
-    private Individual[] population;
-	private static final int POP_SIZE = 100000;
+    private static final int POP_SIZE = 100000;
+    private Individual[] population = new Individual[POP_SIZE];
+    private int individualCounter = 0;
 
     @Override
     protected void handleMessage(Message m) {
         if (m instanceof MeasureFitnessMessage mm) {
-            population = mm.getPopulation();
+            individualCounter++;
             
-            for (int i = 0; i < POP_SIZE; i++) {
-				population[i].measureFitness();   
-			}
-            this.send(new FitnessMeasuredMessage(population, mm.getGeneration()), m.getSenderAddress());
+			mm.getIndividual().measureFitness();  
+
+            population[individualCounter-1] = mm.getIndividual(); 
+            if (individualCounter == POP_SIZE) {
+                this.send(new FitnessMeasuredMessage(population, mm.getGeneration()), m.getSenderAddress());
+                individualCounter = 0;
+            }
         }
     }
-    
 }

@@ -5,13 +5,19 @@ import library.messages.Message;
 
 public class MutationMessage extends Message {
 
-    private Individual[] population;
+    private Individual ind;
+    private Individual best;
 
-    public MutationMessage(Individual[] population) {
-        this.population = population;
+    public MutationMessage(Individual ind, Individual best) {
+        this.ind = ind;
+        this.best = best;
     }
 
-    public Individual[] getPopulation() {
-        return this.population;
+    public Individual getIndividual() {
+        return this.ind;
+    }
+
+    public Individual getBest() {
+        return best;
     }
 }

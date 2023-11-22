@@ -5,16 +5,16 @@ import library.messages.Message;
 
 public class MeasureFitnessMessage extends Message {
 
-    private Individual[] population;
+    private Individual ind;
     private int generation;
 
-    public MeasureFitnessMessage(Individual[] population, int generation) {
-        this.population = population;
+    public MeasureFitnessMessage(Individual ind, int generation) {
+        this.ind = ind;
         this.generation = generation;
     }
 
-    public Individual[] getPopulation() {
-        return this.population;
+    public Individual getIndividual() {
+        return this.ind;
     }
 
     public int getGeneration() {

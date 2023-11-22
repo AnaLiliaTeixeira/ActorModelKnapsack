@@ -18,7 +18,8 @@ public class App {
 
                 System.out.println("\nIteration: " + i);
                 long actorTime = runKnapsackActorModel();
-
+                System.out.println("TIMEEEEEEEEEEEE");
+                System.out.println(actorTime);
                 csvWriter.append(actorTime + "\n");
                 
             }
