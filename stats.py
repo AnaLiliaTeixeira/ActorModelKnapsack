@@ -13,3 +13,7 @@ phaserResults = df_knapsack[' Phaser:Thread 4']
 plt.boxplot([sequentialResults] + [actorModelResults] + [phaserResults], labels=['Sequential', 'Actor Model', 'Phaser:Thread 4'])
 plt.xticks(fontsize=8)
 plt.show()
+
+print(actorModelResults.mean())
+print(sequentialResults.mean()) 
+print(phaserResults.mean())
